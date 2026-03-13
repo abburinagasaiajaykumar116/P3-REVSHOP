@@ -57,6 +57,7 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
+        ex.printStackTrace();
         ErrorResponse error = new ErrorResponse(
                 500,
                 "INTERNAL_SERVER_ERROR",

@@ -8,6 +8,7 @@ public class SellerReviewView {
     private Integer userId;
     private Integer rating;
     private String comment;
+    private String userName;
 
     public SellerReviewView(String productName, Integer userId, Integer rating, String comment) {
         this.productName = productName;
@@ -20,4 +21,7 @@ public class SellerReviewView {
     public Integer getUserId() { return userId; }
     public Integer getRating() { return rating; }
     public String getComment() { return comment; }
+    
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 }

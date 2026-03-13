@@ -22,6 +22,8 @@
     <properties>
         <java.version>21</java.version>
         <spring-cloud.version>2023.0.4</spring-cloud.version>
+        <!-- SonarQube Properties -->
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
     </properties>
 
     <!-- ================= DEPENDENCIES ================= -->
@@ -52,11 +54,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- LOGGING -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
+    
 
         <!-- AOP -->
         <dependency>
@@ -104,12 +102,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- LOMBOK -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
+
 
         <!-- DEVTOOLS -->
         <dependency>
@@ -149,6 +142,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- SonarQube Plugin -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.10.0.2594</version>
             </plugin>
         </plugins>
     </build>

@@ -16,7 +16,10 @@ import reactor.core.publisher.Mono; import java.util.List;
     @Override public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain)
     {
         String path = exchange.getRequest().getURI().getPath();
-        if (path.startsWith("/auth") || path.startsWith("/user/security-question") || path.startsWith("/user/forgot-password") || path.startsWith("/products") || path.startsWith("/categories")) { return chain.filter(exchange); } String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION); if (header == null || !header.startsWith("Bearer "))
+        if (exchange.getRequest().getMethod().name().equals("OPTIONS")) {
+            return chain.filter(exchange);
+        }
+        if (path.startsWith("/auth") || path.startsWith("/user/security-question") || path.startsWith("/user/forgot-password") || path.startsWith("/products") || path.startsWith("/categories") || path.startsWith("/reviews/product/")) { return chain.filter(exchange); } String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION); if (header == null || !header.startsWith("Bearer "))
         { exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         } try {
@@ -25,5 +28,10 @@ import reactor.core.publisher.Mono; import java.util.List;
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken( email, null, List.of(new SimpleGrantedAuthority(role)) );
             return chain.filter(exchange) .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
         } catch (Exception e) {
+            System.out.println("JWT FILTER EXCEPTION:");
+            e.printStackTrace();
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete(); } } }
+            return exchange.getResponse().setComplete(); 
+        } 
+    } 
+}

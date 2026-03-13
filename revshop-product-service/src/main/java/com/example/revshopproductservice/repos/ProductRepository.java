@@ -3,6 +3,8 @@ package com.example.revshopproductservice.repos;
 
 
 import com.example.revshopproductservice.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -16,13 +18,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByNameContainingIgnoreCase(String keyword);
 
-    List<Product> findByIsActiveTrue();
+    Page<Product> findByIsActiveTrue(Pageable pageable);
 
-    List<Product> findByCategoryIdAndIsActiveTrue(Integer categoryId);
+    Page<Product> findByCategoryIdAndIsActiveTrue(Integer categoryId, Pageable pageable);
 
-    List<Product> findBySellerIdAndIsActiveTrue(Integer sellerId);
+    Page<Product> findBySellerIdAndIsActiveTrue(Integer sellerId, Pageable pageable);
+    
+    @Query("SELECT p.productId FROM Product p WHERE p.sellerId = :sellerId AND p.isActive = true")
+    List<Long> findProductIdsBySellerIdAndIsActiveTrue(Integer sellerId);
 
-    List<Product> findByNameContainingIgnoreCaseAndIsActiveTrue(String keyword);
+    @Query("SELECT p FROM Product p JOIN Category c ON p.categoryId = c.categoryId WHERE (LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(c.categoryName) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND p.isActive = true")
+    Page<Product> findByNameOrCategoryNameContainingIgnoreCaseAndIsActiveTrue(String keyword, Pageable pageable);
 
     boolean existsByCategoryId(Integer categoryId);
 
@@ -32,7 +38,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 SELECT p
 FROM Product p
 WHERE p.stockQuantity <= p.stockThreshold
-AND p.isActive = true
+AND p.isActive = true 
+AND p.sellerId = :sellerId
 """)
-    List<Product> findLowStockProducts();
+    List<Product> findLowStockProductsBySellerId(Integer sellerId);
 }

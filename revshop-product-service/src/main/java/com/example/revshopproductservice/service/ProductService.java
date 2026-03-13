@@ -2,32 +2,33 @@ package com.example.revshopproductservice.service;
 
 import com.example.revshopproductservice.model.Product;
 
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductService {
 
     Product addProduct(Product product);
 
-    List<Product> getAllProducts();
+    Page<Product> getAllProducts(int page, int size);
 
     Product getProductById(Long productId);
 
-    List<Product> getProductsByCategory(Integer categoryId);
+    Page<Product> getProductsByCategory(Integer categoryId, int page, int size);
 
-    List<Product> searchProducts(String keyword);
+    Page<Product> searchProducts(String keyword, int page, int size);
 
-    List<Product> getSellerProducts(Integer sellerId);
+    Page<Product> getSellerProducts(Integer sellerId, int page, int size);
+
+    List<Long> getProductIdsBySeller(Integer sellerId);
 
     Product updateProduct(Product product);
 
     void deleteProduct(Long productId, Integer sellerId);
 
-    Product updateStock(Long productId, Integer stockQuantity);
+    Product updateStock(Long productId, Integer stockQuantity, Integer sellerId);
+    Product reduceStock(Long productId, Integer quantity, String authHeader);
+    Product addStock(Long productId, Integer quantity, Integer sellerId);
 
-    Product reduceStock(Long productId, Integer quantity);
-
-    Product addStock(Long productId, Integer quantity);
-
-    List<Product> getLowStockProducts();
+    List<Product> getLowStockProducts(Integer sellerId);
 
 }

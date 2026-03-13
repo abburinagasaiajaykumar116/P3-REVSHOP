@@ -3,6 +3,7 @@ package com.example.revshopproductservice.controller;
 import com.example.revshopproductservice.dtos.ReviewView;
 import com.example.revshopproductservice.dtos.SellerReviewView;
 import com.example.revshopproductservice.service.ReviewService;
+import com.example.revshopproductservice.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,14 +15,24 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final JwtUtil jwtUtil;
+
+    private Integer getUserIdOrThrow(String authHeader) {
+        Integer userId = jwtUtil.extractUserIdFromHeader(authHeader);
+        if (userId == null) {
+            throw new RuntimeException("Unauthorized: Unable to extract User ID from token");
+        }
+        return userId;
+    }
 
     // Add review
     @PostMapping
-    public ReviewView giveReview(@RequestParam Integer userId,
+    public ReviewView giveReview(@RequestHeader("Authorization") String authHeader,
                                  @RequestParam Long productId,
                                  @RequestParam Integer rating,
                                  @RequestParam(required = false) String comment) {
 
+        Integer userId = getUserIdOrThrow(authHeader);
         return reviewService.giveReview(userId, productId, rating, comment);
     }
 
@@ -33,17 +44,19 @@ public class ReviewController {
     }
 
     // Seller dashboard reviews
-    @GetMapping("/seller/{sellerId}")
-    public List<SellerReviewView> viewReviewsForSeller(@PathVariable Integer sellerId) {
+    @GetMapping("/seller")
+    public List<SellerReviewView> viewReviewsForSeller(@RequestHeader("Authorization") String authHeader) {
 
+        Integer sellerId = getUserIdOrThrow(authHeader);
         return reviewService.viewReviewsForSeller(sellerId);
     }
 
     //Delete Review
     @DeleteMapping
-    public String deleteReview(@RequestParam Integer userId,
+    public String deleteReview(@RequestHeader("Authorization") String authHeader,
                                @RequestParam Long productId) {
 
+        Integer userId = getUserIdOrThrow(authHeader);
         reviewService.deleteReview(userId, productId);
 
         return "Review deleted successfully";

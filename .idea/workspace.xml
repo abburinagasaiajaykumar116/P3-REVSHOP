@@ -1,31 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1781aa1-07ec-439c-9977-6b95f7e56afd" name="Changes" comment="" />
+    <list default="true" id="51c493fd-4639-4979-a6d7-af8fd4d61b51" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/revshop-config/api-gateway.yml" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-config/api-gateway.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/revshop-frontend/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/revshop-frontend/src/styles.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
-  <component name="ProjectId" id="3AUGpDHnDTOeZXBpgfbkEAHIFKA" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/revshop-frontend" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="3AbbPUSdhabS4ySVltgoaGRzOjE" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Ajay/Documents/Revature Training/P3 Project",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.RevshopConfigServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.RevshopApiGatewayApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.RevshopConfigServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.RevshopEurekaServerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.RevshopProductServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.RevshopUserServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Ajay/duplicate p3&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager" selected="Spring Boot.RevshopConfigServerApplication">
+    <configuration name="RevshopApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="revshop-api-gateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.revshopapigateway.RevshopApiGatewayApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.revshopapigateway.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RevshopConfigServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="revshop-config-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.revshopconfigserver.RevshopConfigServerApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.revshopconfigserver.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RevshopEurekaServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="revshop-eureka-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.revshopeurekaserver.RevshopEurekaServerApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.revshopeurekaserver.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RevshopProductServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="revshop-product-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.revshopproductservice.RevshopProductServiceApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.revshopproductservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RevshopUserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="revshop-user-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.revshopuserservice.RevshopUserServiceApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.revshopuserservice.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.RevshopConfigServerApplication" />
+        <item itemvalue="Spring Boot.RevshopEurekaServerApplication" />
+        <item itemvalue="Spring Boot.RevshopUserServiceApplication" />
+        <item itemvalue="Spring Boot.RevshopApiGatewayApplication" />
+        <item itemvalue="Spring Boot.RevshopProductServiceApplication" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -35,11 +155,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="b1781aa1-07ec-439c-9977-6b95f7e56afd" name="Changes" comment="" />
-      <created>1772639916834</created>
+      <changelist id="51c493fd-4639-4979-a6d7-af8fd4d61b51" name="Changes" comment="" />
+      <created>1772864192803</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1772639916834</updated>
+      <updated>1772864192803</updated>
     </task>
     <servers />
   </component>

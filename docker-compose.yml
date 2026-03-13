@@ -1,0 +1,194 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    networks:
+      - revshop-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  revshop-eureka-server:
+    build:
+      context: ./revshop-eureka-server
+    container_name: revshop-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - revshop-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  revshop-config-server:
+    build:
+      context: ./revshop-config-server
+    container_name: revshop-config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - revshop-network
+    depends_on:
+      - revshop-eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+
+  revshop-api-gateway:
+    build:
+      context: ./revshop-api-gateway
+    container_name: revshop-api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - revshop-network
+    depends_on:
+      - revshop-eureka-server
+      - revshop-config-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_URI=http://revshop-eureka-server:8761/eureka/
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+
+  revshop-user-service:
+    build:
+      context: ./revshop-user-service
+    container_name: revshop-user-service
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-user-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_users?createDatabaseIfNotExist=true
+
+  revshop-product-service:
+    build:
+      context: ./revshop-product-service
+    container_name: revshop-product-service
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-product-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_products?createDatabaseIfNotExist=true
+
+  revshop-order-service:
+    build:
+      context: ./revshop-order-service
+    container_name: revshop-order-service
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-order-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_orders?createDatabaseIfNotExist=true
+
+  revshop-cart:
+    build:
+      context: ./revshop-cart
+    container_name: revshop-cart
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-cart
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_cart?createDatabaseIfNotExist=true
+
+  revshop-payment-service:
+    build:
+      context: ./revshop-payment-service
+    container_name: revshop-payment-service
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-payment-service
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_payments?createDatabaseIfNotExist=true
+
+  revshop-notification:
+    build:
+      context: ./revshop-notification
+    container_name: revshop-notification
+    networks:
+      - revshop-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      revshop-eureka-server:
+        condition: service_started
+      revshop-config-server:
+        condition: service_started
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://revshop-eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_HOSTNAME=revshop-notification
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://revshop-config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_notification?createDatabaseIfNotExist=true
+
+  revshop-frontend:
+    build:
+      context: ./revshop-frontend
+    container_name: revshop-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - revshop-network
+    depends_on:
+      - revshop-api-gateway
+
+networks:
+  revshop-network:
+    driver: bridge

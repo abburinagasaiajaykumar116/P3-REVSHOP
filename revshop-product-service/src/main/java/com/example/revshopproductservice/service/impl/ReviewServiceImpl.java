@@ -67,7 +67,19 @@ public class ReviewServiceImpl implements ReviewService {
 
         productRepository.save(product);
 
-        return new ReviewView(userId, rating, comment);
+        ReviewView reviewView = new ReviewView(userId, rating, comment);
+        try {
+            Object userObj = userClient.getUser(userId);
+            if (userObj instanceof java.util.Map) {
+                java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
+                if (userMap.containsKey("name")) {
+                    reviewView.setUserName((String) userMap.get("name"));
+                }
+            }
+        } catch (Exception e) {
+            reviewView.setUserName("Anonymous");
+        }
+        return reviewView;
     }
 
     @Override
@@ -76,7 +88,21 @@ public class ReviewServiceImpl implements ReviewService {
         if (productId == null)
             throw new BadRequestException("Product id is required");
 
-        return reviewRepository.findReviewsByProduct(productId);
+        List<ReviewView> reviews = reviewRepository.findReviewsByProduct(productId);
+        for (ReviewView review : reviews) {
+            try {
+                Object userObj = userClient.getUser(review.getUserId());
+                if (userObj instanceof java.util.Map) {
+                    java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
+                    if (userMap.containsKey("name")) {
+                        review.setUserName((String) userMap.get("name"));
+                    }
+                }
+            } catch (Exception e) {
+                review.setUserName("Anonymous");
+            }
+        }
+        return reviews;
     }
 
     @Override
@@ -85,7 +111,21 @@ public class ReviewServiceImpl implements ReviewService {
         if (sellerId == null)
             throw new BadRequestException("Seller id is required");
 
-        return reviewRepository.findReviewsForSeller(sellerId);
+        List<SellerReviewView> reviews = reviewRepository.findReviewsForSeller(sellerId);
+        for (SellerReviewView review : reviews) {
+            try {
+                Object userObj = userClient.getUser(review.getUserId());
+                if (userObj instanceof java.util.Map) {
+                    java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
+                    if (userMap.containsKey("name")) {
+                        review.setUserName((String) userMap.get("name"));
+                    }
+                }
+            } catch (Exception e) {
+                review.setUserName("Anonymous");
+            }
+        }
+        return reviews;
     }
 
     @Override
