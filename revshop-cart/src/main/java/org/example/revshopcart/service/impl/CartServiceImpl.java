@@ -99,9 +99,9 @@ public class CartServiceImpl implements CartService {
                     try {
                         org.example.revshopcart.dto.ProductDto product = productClient.getProductById(item.getProductId());
                         if (product != null) {
-                            response.setProductName(product.getProductName());
-                            response.setPrice(product.getPrice());
-                            response.setImageUrl(product.getImageUrl());
+                            response.setProductName(product.productName());
+                            response.setPrice(product.price());
+                            response.setImageUrl(product.imageUrl());
                         }
                     } catch (Exception e) {
                         response.setProductName("Product Unavailable");

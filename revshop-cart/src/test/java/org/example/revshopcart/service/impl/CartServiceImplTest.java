@@ -63,10 +63,7 @@ public class CartServiceImplTest {
         testCartItem.setProductId(1L);
         testCartItem.setQuantity(2);
 
-        testProduct = new ProductDto();
-        testProduct.setProductId(1L);
-        testProduct.setProductName("Test Product");
-        testProduct.setPrice(100.0);
+        testProduct = new ProductDto(1L, "Test Product", 100.0, null);
     }
 
     @Test

@@ -20,7 +20,7 @@ public class Order {
 
     private Long userId; // Changed from User entity to Long ID
     private double totalAmount;
-    private String status;
+    private OrderStatus status;
     private String shippingAddress;
     private String billingAddress;
     private String paymentMethod;

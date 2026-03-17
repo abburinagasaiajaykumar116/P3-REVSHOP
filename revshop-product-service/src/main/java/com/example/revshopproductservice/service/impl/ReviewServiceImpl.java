@@ -67,19 +67,18 @@ public class ReviewServiceImpl implements ReviewService {
 
         productRepository.save(product);
 
-        ReviewView reviewView = new ReviewView(userId, rating, comment);
+        String userName = "Anonymous";
         try {
             Object userObj = userClient.getUser(userId);
-            if (userObj instanceof java.util.Map) {
-                java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
+            if (userObj instanceof java.util.Map<?, ?> userMap) {
                 if (userMap.containsKey("name")) {
-                    reviewView.setUserName((String) userMap.get("name"));
+                    userName = (String) userMap.get("name");
                 }
             }
         } catch (Exception e) {
-            reviewView.setUserName("Anonymous");
+            // Log error
         }
-        return reviewView;
+        return new ReviewView(userId, rating, comment, userName);
     }
 
     @Override
@@ -89,20 +88,35 @@ public class ReviewServiceImpl implements ReviewService {
             throw new BadRequestException("Product id is required");
 
         List<ReviewView> reviews = reviewRepository.findReviewsByProduct(productId);
-        for (ReviewView review : reviews) {
-            try {
-                Object userObj = userClient.getUser(review.getUserId());
-                if (userObj instanceof java.util.Map) {
-                    java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
-                    if (userMap.containsKey("name")) {
-                        review.setUserName((String) userMap.get("name"));
+        
+        // Use Virtual Threads to enrich user names concurrently (Java 21)
+        try (var executor = java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor()) {
+            return reviews.stream()
+                .map(review -> executor.submit(() -> {
+                    String userName = "Anonymous";
+                    try {
+                        Object userObj = userClient.getUser(review.userId());
+                        if (userObj instanceof java.util.Map<?, ?> userMap) {
+                            if (userMap.containsKey("name")) {
+                                userName = (String) userMap.get("name");
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Log error
                     }
-                }
-            } catch (Exception e) {
-                review.setUserName("Anonymous");
-            }
+                    return new ReviewView(review.userId(), review.rating(), review.comment(), userName);
+                }))
+                .toList()
+                .stream()
+                .map(future -> {
+                    try {
+                        return future.get();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to fetch user details", e);
+                    }
+                })
+                .toList();
         }
-        return reviews;
     }
 
     @Override
@@ -112,20 +126,35 @@ public class ReviewServiceImpl implements ReviewService {
             throw new BadRequestException("Seller id is required");
 
         List<SellerReviewView> reviews = reviewRepository.findReviewsForSeller(sellerId);
-        for (SellerReviewView review : reviews) {
-            try {
-                Object userObj = userClient.getUser(review.getUserId());
-                if (userObj instanceof java.util.Map) {
-                    java.util.Map<?, ?> userMap = (java.util.Map<?, ?>) userObj;
-                    if (userMap.containsKey("name")) {
-                        review.setUserName((String) userMap.get("name"));
+        
+        // Use Virtual Threads to enrich user names concurrently (Java 21)
+        try (var executor = java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor()) {
+            return reviews.stream()
+                .map(review -> executor.submit(() -> {
+                    String userName = "Anonymous";
+                    try {
+                        Object userObj = userClient.getUser(review.userId());
+                        if (userObj instanceof java.util.Map<?, ?> userMap) {
+                            if (userMap.containsKey("name")) {
+                                userName = (String) userMap.get("name");
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Log or ignore
                     }
-                }
-            } catch (Exception e) {
-                review.setUserName("Anonymous");
-            }
+                    return new SellerReviewView(review.productName(), review.userId(), review.rating(), review.comment(), userName);
+                }))
+                .toList()
+                .stream()
+                .map(future -> {
+                    try {
+                        return future.get();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to fetch user details", e);
+                    }
+                })
+                .toList();
         }
-        return reviews;
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springboot.revshoporderservice.exception.ResourceNotFoundException;
 import org.springboot.revshoporderservice.exception.UnauthorizedException;
 import org.springboot.revshoporderservice.model.Order;
 import org.springboot.revshoporderservice.model.OrderItem;
+import org.springboot.revshoporderservice.model.OrderStatus;
 import org.springboot.revshoporderservice.repository.OrderRepository;
 import org.springboot.revshoporderservice.service.OrderService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -53,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUserId(userId);
         order.setShippingAddress(request.getShippingAddress());
         order.setBillingAddress(request.getBillingAddress());
-        order.setStatus("PLACED");
+        order.setStatus(new OrderStatus.Placed());
 
         double totalAmount = 0;
         List<OrderItem> orderItems = new ArrayList<>();
@@ -64,8 +65,8 @@ public class OrderServiceImpl implements OrderService {
                 productClient.reduceStock(itemReq.getProductId(), itemReq.getQuantity(), authHeader);
                 
                 ProductDTO productDTO = productClient.getProductById(itemReq.getProductId(), authHeader);
-                if (productDTO != null && productDTO.getSellerId() != null) {
-                    sellerIds.add(productDTO.getSellerId());
+                if (productDTO != null && productDTO.sellerId() != null) {
+                    sellerIds.add(productDTO.sellerId());
                 }
             } catch (Exception e) {
                 System.out.println("Product Service unreachable for Product ID: " + itemReq.getProductId());
@@ -95,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             PaymentResponse paymentResponse = paymentClient.makePayment(authHeader, paymentRequest);
             if ("SUCCESS".equalsIgnoreCase(paymentResponse.getStatus())) {
-                order.setStatus("PLACED");
+                order.setStatus(new OrderStatus.Placed());
                 order.setPaymentMethod(paymentResponse.getPaymentMethod());
                 
                 // NOTIFY BUYER
@@ -115,10 +116,10 @@ public class OrderServiceImpl implements OrderService {
                 }
                 
             } else {
-                order.setStatus("PAYMENT_FAILED");
+                order.setStatus(new OrderStatus.PaymentFailed());
             }
         } catch (Exception e) {
-            order.setStatus("PAYMENT_PENDING");
+            order.setStatus(new OrderStatus.PaymentPending());
             System.out.println("Payment service failed or unreachable: " + e.getMessage());
         }
         
@@ -144,21 +145,22 @@ public class OrderServiceImpl implements OrderService {
             OrderHistoryResponse res = new OrderHistoryResponse();
             res.setOrderId(order.getOrderId());
             res.setTotalAmount(order.getTotalAmount());
-            res.setStatus(order.getStatus());
+            res.setStatus(order.getStatus().toString());
 
             List<OrderHistoryItemDTO> itemDTOs = order.getOrderItems().stream().map(item -> {
-                OrderHistoryItemDTO itemDTO = new OrderHistoryItemDTO();
-                itemDTO.setProductId(item.getProductId());
-                itemDTO.setQuantity(item.getQuantity());
-                itemDTO.setPrice(item.getPrice());
-
+                String productName = "Product details unavailable";
                 try {
                     ProductDTO product = productClient.getProductById(item.getProductId(), authHeader);
-                    itemDTO.setProductName(product.getName());
+                    if (product != null) productName = product.name();
                 } catch (Exception e) {
-                    itemDTO.setProductName("Product details unavailable");
+                    // Log or handle appropriately
                 }
-                return itemDTO;
+                return new OrderHistoryItemDTO(
+                    item.getProductId(),
+                    productName,
+                    item.getQuantity(),
+                    item.getPrice()
+                );
             }).toList();
 
             res.setItems(itemDTOs);
@@ -201,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
                     res.setProductId(item.getProductId());
                     res.setQuantity(item.getQuantity());
                     res.setPrice(item.getPrice());
-                    res.setStatus(order.getStatus());
+                    res.setStatus(order.getStatus().toString());
                     res.setShippingAddress(order.getShippingAddress());
                     res.setBillingAddress(order.getBillingAddress());
                     res.setPaymentMethod(order.getPaymentMethod());
@@ -221,7 +223,7 @@ public class OrderServiceImpl implements OrderService {
                     // 3. ENRICHMENT: Fetch the product name for the seller view
                     try {
                         ProductDTO product = productClient.getProductById(item.getProductId(), authHeader);
-                        res.setProductName(product.getName());
+                        res.setProductName(product.name());
                     } catch (Exception e) {
                         res.setProductName("Name Unavailable");
                     }
@@ -245,7 +247,18 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("Status update cannot be empty.");
         }
 
-        order.setStatus(status.toUpperCase());
+        OrderStatus newStatus = OrderStatus.fromString(status);
+        
+        // Demonstrating Pattern Matching for Switch (Java 21)
+        String logMessage = switch (newStatus) {
+            case OrderStatus.Placed p -> "Order is being placed";
+            case OrderStatus.Shipped s -> "Order has been shipped successfully";
+            case OrderStatus.Delivered d -> "Order reached the customer";
+            default -> "Order status updated to " + newStatus;
+        };
+        log.info(logMessage);
+
+        order.setStatus(newStatus);
         orderRepo.save(order);
 
         // NOTIFY BUYER ON STATUS CHANGE
